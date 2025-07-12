@@ -4,7 +4,8 @@ ENTRY( _start )
 
 MEMORY
 {
-  ram   (wxa!ri) : ORIGIN = 0x80000000, LENGTH = 128M
+  rom (rx)  : ORIGIN = 0x80000000, LENGTH = 256K
+  ram (rw)  : ORIGIN = 0x80040000, LENGTH = 256K
 }
 
 SECTIONS
@@ -14,43 +15,42 @@ SECTIONS
     *(.reset)
     *(.text .text.*)
     PROVIDE(_text_end = .);
-  } >ram AT>ram
+  } >rom AT>rom
 
   .rodata : {
     PROVIDE(_rodata_start = .);
     *(.rodata .rodata.*)
-    *(.note.* )
     PROVIDE(_rodata_end = .);
-  } >ram AT>ram
+  } >rom AT>rom
 
   .data : {
     . = ALIGN(4096);
     PROVIDE(_data_start = .);
     *(.data .data.*)
-  } >ram AT>ram
+  } >ram AT>rom   /* Load from ROM, run from RAM */
 
   .sdata : {
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.*)
     PROVIDE(_data_end = .);
-  } >ram AT>ram
+  } >ram AT>rom
 
   .sbss : {
     . = ALIGN(16);
     PROVIDE(_bss_start = .);
     *(.sbss .sbss.*)
-  } >ram AT>ram
+  } >ram
 
-  .bss :{
+  .bss : {
     *(.bss .bss.*)
     . = ALIGN(16);
     PROVIDE(_bss_end = .);
-  } >ram AT>ram
+  } >ram
 
-  .stack :{
+  .stack : {
     . = ALIGN(16);
     PROVIDE(_stack_start = .);
     . = . + 4096;
     PROVIDE(_stack_end = .);
-  } >ram AT>ram
+  } >ram
 }
