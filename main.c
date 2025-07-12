@@ -9,6 +9,18 @@ static void clearbss(void)
     }
 }
 
+static void put_char(char c)
+{
+    volatile unsigned char * const uart = (unsigned char *)0x10000000U;
+    *uart = c;
+}
+
+void print_message(const char *s)
+{
+    while (*s) put_char(*s++);
+}
+
 void main(void) {
-     clearbss();
+    clearbss();
+    print_message("Hello, world!!\n");
 }
