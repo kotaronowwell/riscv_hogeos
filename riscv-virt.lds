@@ -27,17 +27,17 @@ SECTIONS
     . = ALIGN(4096);
     PROVIDE(_data_start = .);
     *(.data .data.*)
-  } >ram AT>rom   /* Load from ROM, run from RAM */
+  } >ram AT>ram
 
   .sdata : {
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.*)
     PROVIDE(_data_end = .);
-  } >ram AT>rom
+  } >ram AT>ram
 
   .sbss : {
-    . = ALIGN(16);
     PROVIDE(_bss_start = .);
+    . = ALIGN(16);
     *(.sbss .sbss.*)
   } >ram
 
@@ -45,6 +45,13 @@ SECTIONS
     *(.bss .bss.*)
     . = ALIGN(16);
     PROVIDE(_bss_end = .);
+  } >ram
+
+  .heap : {
+    . = ALIGN(16);
+    PROVIDE(_heap_start = .);
+    . = . + 4096;
+    PROVIDE(_heap_end = .);
   } >ram
 
   .stack : {

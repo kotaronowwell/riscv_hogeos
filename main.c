@@ -1,13 +1,6 @@
-static void clearbss(void)
-{
-    unsigned long long *p;
-    extern unsigned long long _bss_start[];
-    extern unsigned long long _bss_end[];
+#include <stdio.h>
 
-    for (p = _bss_start; p < _bss_end; p++) {
-        *p = 0LL;
-    }
-}
+extern int _write(int fd, const void *buf, size_t count);
 
 static void put_char(char c)
 {
@@ -20,7 +13,12 @@ void print_message(const char *s)
     while (*s) put_char(*s++);
 }
 
-void main(void) {
-    clearbss();
+int main(void) {
     print_message("Hello, world!!\n");
+    _write(0, "Hello, world!!\n", 27);
+    puts("Hello!\n");
+    printf("HOGEHOGE\n");
+    _write(0, "FUGAFUGA!!\n", 27);
+    fflush(stdout);
+    while(1);
 }
